@@ -9,4 +9,4 @@ script:
   - yarn run build # build your site
   - yarn test # run your normal tests
 after_success:
-  - lhci autorun --upload.target=temporary-public-storage # run lighthouse CI against your static site
+  - lhci autorun --upload.target=temporary-public-storage --perf=95 # run lighthouse CI against your static site
