@@ -1,10 +1,12 @@
 language: node_js
+node_js:
+  - lts/*
 addons:
   chrome: stable # make Chrome available
 before_install:
-  - npm install -g @lhci/cli@0.3.x # install LHCI
+  - yarn global add @lhci/cli@0.3.x # install LHCI
 script:
-  - npm run build # build your site
-  - npm test # run your normal tests
+  - yarn run build # build your site
+  - yarn test # run your normal tests
 after_success:
   - lhci autorun --upload.target=temporary-public-storage # run lighthouse CI against your static site
