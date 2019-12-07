@@ -3,7 +3,54 @@
   height: 100vh;
   background-color: #282c34;
 }
-
-.Foo{
+.ml3{
+  margin-left:1rem;
+}
+.pl13{
   padding-left: 1.3rem;
+}
+
+.pr2 {
+  padding-right: 0.5rem;
+}
+.box{
+  -moz-box-shadow: 0 0 10px #000000;
+  -webkit-box-shadow: 0 0 10px #000000;
+  box-shadow: 0 0 2px #000000;
+}
+
+.vertical-bar{
+  border-left: solid 1px #414243;
+  height: 30px;
+}
+
+.google-extras{
+  height: '30px';
+  color: #acaeb1;
+}
+
+.flex-items-center{
+  display: flex;
+  align-items: center;
+}
+
+.mimmic-google-search{
+  font-size: 12px;
+  border: none;
+
+  background-color: black;
+  color: white;
+
+  min-width:232px; 
+  width:40vw; 
+  max-width:327px
+}
+
+.google-input{
+  padding-right: 14px;
+  width:100%; 
+  outline: none;
+  border: none;
+  background-color: black; 
+  color: white;
 }
