@@ -5,6 +5,8 @@ import confetti from 'canvas-confetti'
 function App() {
   const [numFound, setNumFound] = useState(0);
   const [count, setCount] = useState(0);
+  const [showDialog, setDialog] = useState(true);
+  
 
   function cashMoney(){
     confetti({
@@ -37,24 +39,34 @@ function App() {
               setCount(1) 
     } else {  setCount(count+1) }
   }
+
+  function closeDialog(){
+    setDialog(false)
+  }
+  function openDialog(){
+    setDialog(true)
+  }
   
   return (
     <div className="App" >
       <button onClick={() => firstSearch('button')}>
+        search
       </button>
       <button onClick={() => secondSearchReverse('button')}>
       </button>
-      
-      <dialog open className="box flex-items-center mimmic-google-search">
         <input autoFocus className="google-input"></input>
+      { showDialog ?
+      <dialog open={undefined} className="box flex-items-center mimmic-google-search">
         {count}/{numFound}
         <div className="flex-items-center google-extras" style={{ }}>
           <div className="ml3 vertical-bar" style={{   }}></div>
           <i className="pl13 fas fa-chevron-up fa-m"></i>
           <i className="pl13 fas fa-chevron-down fa-m"></i>
-          <i className="pl13 pr2 fas fa-times fa-m"></i>
+          <i onClick={()=>closeDialog()} className="pl13 pr2 fas fa-times fa-m"></i>
         </div>
       </dialog>
+      : ""
+      }
       <div style={{
           "position":"relative",
           "margin": "auto",
