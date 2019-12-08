@@ -25,6 +25,12 @@ function App() {
     console.log({count, money: document.body.children.root.innerHTML})
     window.find('This is a button', false, false, true, false, false, false, true); 
   }
+  function secondSearchReverse(text) {
+    window.find('This is a button', false, true, true, false, false, false, true); 
+    if(count === 1){ 
+              setCount(numFound) 
+    } else {  setCount(count-1) }
+  }
   function secondSearch(text) {
     window.find('This is a button', false, false, true, false, false, false, true); 
     if(count === numFound){ 
@@ -36,7 +42,7 @@ function App() {
     <div className="App" >
       <button onClick={() => firstSearch('button')}>
       </button>
-      <button onClick={() => secondSearch('button')}>
+      <button onClick={() => secondSearchReverse('button')}>
       </button>
       
       <dialog open className="box flex-items-center mimmic-google-search">
