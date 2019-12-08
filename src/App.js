@@ -46,6 +46,19 @@ function App() {
   function openDialog(){
     setDialog(true)
   }
+
+  function keyPressed(e){
+    if (e.charCode == 13) {
+      alert('Enter... (KeyPress, use charCode)');
+    }
+    if (e.charCode == 38) {
+      alert('up arrow... (KeyPress, use charCode)');
+    }
+    if (e.charCode == 40) {
+      alert('down arrow... (KeyPress, use charCode)');
+    }
+
+  }
   
   return (
     <div className="App" >
@@ -54,9 +67,9 @@ function App() {
       </button>
       <button onClick={() => secondSearchReverse('button')}>
       </button>
-        <input autoFocus className="google-input"></input>
       { showDialog ?
       <dialog open={undefined} className="box flex-items-center mimmic-google-search">
+        <input autoFocus onKeyPress={keyPressed} className="google-input"></input>
         {count}/{numFound}
         <div className="flex-items-center google-extras" style={{ }}>
           <div className="ml3 vertical-bar" style={{   }}></div>
