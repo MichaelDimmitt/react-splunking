@@ -6,7 +6,7 @@ function App() {
   const [numFound, setNumFound] = useState(0);
   const [count, setCount] = useState(0);
   const [showDialog, setDialog] = useState(true);
-  
+  const [searchString, setSearchString] = useState('');
 
   function cashMoney(){
     confetti({
@@ -48,33 +48,40 @@ function App() {
   }
 
   function keyPressed(e){
-    if (e.charCode == 13) {
-      alert('Enter... (KeyPress, use charCode)');
+    
+    // https://www.w3schools.com/charsets/ref_html_ascii.asp
+    if(e.keyCode === 37 || e.keyCode === 39){
+      alert(e.keyCode, 'num or char... (KeyPress, use charCode)');
     }
-    if (e.charCode == 38) {
+    else if (e.keyCode === 38) {
       alert('up arrow... (KeyPress, use charCode)');
     }
-    if (e.charCode == 40) {
+    else if (e.keyCode === 40) {
       alert('down arrow... (KeyPress, use charCode)');
+    }
+    else if (e.charCode === 13) {
+      alert('Enter... (KeyPress, use charCode)');
+    }
+    else {
+      console.log({t: e.target.value, a: e.target})
+      setSearchString(searchString)
     }
 
   }
-  
+    
   return (
     <div className="App" >
-      <button onClick={() => firstSearch('button')}>
+      <button onClick={() => openDialog()}>
         search
-      </button>
-      <button onClick={() => secondSearchReverse('button')}>
       </button>
       { showDialog ?
       <dialog open={undefined} className="box flex-items-center mimmic-google-search">
-        <input autoFocus onKeyPress={keyPressed} className="google-input"></input>
+        <input autoFocus onKeyPress={keyPressed} onKeyDown={keyPressed} className="google-input"></input>
         {count}/{numFound}
-        <div className="flex-items-center google-extras" style={{ }}>
-          <div className="ml3 vertical-bar" style={{   }}></div>
-          <i className="pl13 fas fa-chevron-up fa-m"></i>
-          <i className="pl13 fas fa-chevron-down fa-m"></i>
+        <div className="flex-items-center google-extras" >
+          <div className="ml3 vertical-bar" ></div>
+          <i onClick={()=>secondSearchReverse()} className="pl13 fas fa-chevron-up fa-m"></i>
+          <i onClick={()=>secondSearch()} className="pl13 fas fa-chevron-down fa-m"></i>
           <i onClick={()=>closeDialog()} className="pl13 pr2 fas fa-times fa-m"></i>
         </div>
       </dialog>
