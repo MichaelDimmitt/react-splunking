@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import confetti from 'canvas-confetti'
 
@@ -11,7 +11,6 @@ function App() {
   const [searchTerm, searchTermSet] = useState('')
 
   useEffect(() => {
-   //skip first run on component mount
    if (searchTerm === '') {
       setCount(0)
       setNumFound(0)
@@ -28,7 +27,6 @@ function App() {
   async function tagSearch(value) {
     firstSearch(value)
   }
-
 
   function firstSearch(text) {
     const searchValue = RegExp(`[^<^/]${text}`,'gi')
