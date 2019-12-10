@@ -25,16 +25,16 @@ function App() {
     setNumFound(countMatches)
 
     console.log({count, money: document.body.children.root.innerHTML})
-    window.find('This is a button', false, false, true, false, false, false, true); 
+    window.find(text, false, false, true, false, false, false, true); 
   }
   function secondSearchReverse(text) {
-    window.find('This is a button', false, true, true, false, false, false, true); 
+    window.find(text, false, true, true, false, false, false, true); 
     if(count === 1){ 
               setCount(numFound) 
     } else {  setCount(count-1) }
   }
   function secondSearch(text) {
-    window.find('This is a button', false, false, true, false, false, false, true); 
+    window.find(text, false, false, true, false, false, false, true); 
     if(count === numFound){ 
               setCount(1) 
     } else {  setCount(count+1) }
@@ -51,20 +51,22 @@ function App() {
     
     // https://www.w3schools.com/charsets/ref_html_ascii.asp
     if(e.keyCode === 37 || e.keyCode === 39){
-      alert(e.keyCode, 'num or char... (KeyPress, use charCode)');
+      // left and right arrow disabled. // should also disable cmd, opt, shift, ctrl, fn, caps, tab
+      return
     }
     else if (e.keyCode === 38) {
-      alert('up arrow... (KeyPress, use charCode)');
+      secondSearchReverse(searchString)
     }
     else if (e.keyCode === 40) {
-      alert('down arrow... (KeyPress, use charCode)');
+      secondSearch(searchString)
     }
     else if (e.charCode === 13) {
-      alert('Enter... (KeyPress, use charCode)');
+      secondSearch(searchString)
     }
     else {
       console.log({t: e.target.value, a: e.target})
-      setSearchString(searchString)
+      setSearchString(e.target.value)
+      firstSearch(e.target.value)
     }
 
   }
