@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import confetti from 'canvas-confetti'
 
@@ -7,6 +7,28 @@ function App() {
   const [count, setCount] = useState(0);
   const [showDialog, setDialog] = useState(true);
   const [searchString, setSearchString] = useState('');
+  const [searchTerm, searchTermSet] = useState('')
+  const isFirstRun = useRef(true)
+
+  useEffect(() => {
+   //skip first run on component mount
+   if (isFirstRun.current) {
+      isFirstRun.current = false
+      return
+   }
+
+    const timeout = setTimeout(() => {
+      tagSearch(searchTerm)
+    }, 1000) //2000 - timeout to execute this function if timeout will be not cleared
+
+    return () => clearTimeout(timeout) //clear timeout (delete function execution)
+  }, [searchTerm])
+
+  // API call only one time in 2 seconds for the last value! Yeeeee
+  async function tagSearch(value) {
+    setSearchString(value)
+    firstSearch(value)
+  }
 
   function cashMoney(){
     confetti({
@@ -21,22 +43,21 @@ function App() {
     const searchValue = RegExp(`[^<^/]${text}`,'gi')
     var matches = document.body.children.root.innerHTML.match(searchValue);
     var countMatches = matches ? matches.length : 0;
-    setCount(count+1)
     setNumFound(countMatches)
-
+    setCount(count+1)
     console.log({count, money: document.body.children.root.innerHTML})
     window.find(text, false, false, true, false, false, false, true); 
   }
   function secondSearchReverse(text) {
     window.find(text, false, true, true, false, false, false, true); 
-    if(count === 1){ 
+    if(count === 0){ 
               setCount(numFound) 
     } else {  setCount(count-1) }
   }
   function secondSearch(text) {
     window.find(text, false, false, true, false, false, false, true); 
-    if(count === numFound){ 
-              setCount(1) 
+    if(count === numFound-1){ 
+              setCount(0) 
     } else {  setCount(count+1) }
   }
 
@@ -47,8 +68,8 @@ function App() {
     setDialog(true)
   }
 
-  function keyPressed(e){
-    
+  function handleInput(e) {
+    console.log(e.target.value, e.keyCode)
     // https://www.w3schools.com/charsets/ref_html_ascii.asp
     if(e.keyCode === 37 || e.keyCode === 39){
       // left and right arrow disabled. // should also disable cmd, opt, shift, ctrl, fn, caps, tab
@@ -64,12 +85,12 @@ function App() {
       secondSearch(searchString)
     }
     else {
-      console.log({t: e.target.value, a: e.target})
-      setSearchString(e.target.value)
-      firstSearch(e.target.value)
+      searchTermSet(e.target.value)
     }
+    
 
   }
+  
     
   return (
     <div className="App" >
@@ -78,7 +99,7 @@ function App() {
       </button>
       { showDialog ?
       <dialog open={undefined} className="box flex-items-center mimmic-google-search">
-        <input autoFocus onKeyPress={keyPressed} onKeyDown={keyPressed} className="google-input"></input>
+        <input autoFocus value={searchTerm} onChange={handleInput} onKeyPress={handleInput} onKeyDown={handleInput} className="google-input"></input>
         {count}/{numFound}
         <div className="flex-items-center google-extras" >
           <div className="ml3 vertical-bar" ></div>
