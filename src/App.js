@@ -1,42 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import confetti from 'canvas-confetti'
 
 function App() {
+  const [showDialog, setDialog] = useState(true);
+
   const [numFound, setNumFound] = useState(0);
   const [count, setCount] = useState(0);
-  const [showDialog, setDialog] = useState(true);
-  const [searchString, setSearchString] = useState('');
 
-  function cashMoney(){
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: {
-          y: 0.6
-      }
-    });
+  const [searchTerm, searchTermSet] = useState('')
+
+  useEffect(() => {
+   //skip first run on component mount
+   if (searchTerm === '') {
+      setCount(0)
+      setNumFound(0)
+      return
+   }
+    const timeout = setTimeout(() => {
+      tagSearch(searchTerm)
+    }, 1000) //1000 - timeout to execute this function if timeout will be not cleared
+
+    return () => clearTimeout(timeout) //clear timeout (delete function execution)
+  }, [searchTerm])
+
+  // API call only one time in 2 seconds for the last value! Yeeeee
+  async function tagSearch(value) {
+    firstSearch(value)
   }
+
+
   function firstSearch(text) {
     const searchValue = RegExp(`[^<^/]${text}`,'gi')
     var matches = document.body.children.root.innerHTML.match(searchValue);
-    var countMatches = matches ? matches.length : 0;
-    setCount(count+1)
-    setNumFound(countMatches)
-
-    console.log({count, money: document.body.children.root.innerHTML})
+    var countMatches = matches ? (setCount(count+1), matches.length) : 0;
+    setNumFound(countMatches-1)
+    
     window.find(text, false, false, true, false, false, false, true); 
   }
   function secondSearchReverse(text) {
     window.find(text, false, true, true, false, false, false, true); 
-    if(count === 1){ 
+    if(count === 0){ 
               setCount(numFound) 
     } else {  setCount(count-1) }
   }
   function secondSearch(text) {
     window.find(text, false, false, true, false, false, false, true); 
     if(count === numFound){ 
-              setCount(1) 
+              setCount(0) 
     } else {  setCount(count+1) }
   }
 
@@ -47,47 +58,50 @@ function App() {
     setDialog(true)
   }
 
-  function keyPressed(e){
-    
-    // https://www.w3schools.com/charsets/ref_html_ascii.asp
-    if(e.keyCode === 37 || e.keyCode === 39){
-      // left and right arrow disabled. // should also disable cmd, opt, shift, ctrl, fn, caps, tab
+  function handleInput(e) { // https://www.w3schools.com/charsets/ref_html_ascii.asp
+
+    // left and right arrow disabled. // should also disable cmd, opt, shift, ctrl, fn, caps, tab
+    if(e.keyCode === 37 || e.keyCode === 39){  
       return
     }
     else if (e.keyCode === 38) {
-      secondSearchReverse(searchString)
+      secondSearchReverse(searchTerm)
     }
     else if (e.keyCode === 40) {
-      secondSearch(searchString)
+      secondSearch(searchTerm)
     }
     else if (e.charCode === 13) {
-      secondSearch(searchString)
+      secondSearch(searchTerm)
     }
     else {
-      console.log({t: e.target.value, a: e.target})
-      setSearchString(e.target.value)
-      firstSearch(e.target.value)
+      searchTermSet(e.target.value)
     }
-
   }
-    
+  
+  function cashMoney(){
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: {
+          y: 0.6
+      }
+    });
+  }
   return (
     <div className="App" >
-      <button onClick={() => openDialog()}>
-        search
-      </button>
+      <br/>
       { showDialog ?
       <dialog open={undefined} className="box flex-items-center mimmic-google-search">
-        <input autoFocus onKeyPress={keyPressed} onKeyDown={keyPressed} className="google-input"></input>
+        <input autoFocus value={searchTerm} onChange={handleInput} onKeyPress={handleInput} onKeyDown={handleInput} className="google-input"></input>
         {count}/{numFound}
         <div className="flex-items-center google-extras" >
           <div className="ml3 vertical-bar" ></div>
-          <i onClick={()=>secondSearchReverse()} className="pl13 fas fa-chevron-up fa-m"></i>
-          <i onClick={()=>secondSearch()} className="pl13 fas fa-chevron-down fa-m"></i>
-          <i onClick={()=>closeDialog()} className="pl13 pr2 fas fa-times fa-m"></i>
+          <i onClick={()=>alert('disabled')} className="pl13 fas fa-chevron-up fa-m"></i>
+          <i onClick={()=>alert('disabled')} className="pl13 fas fa-chevron-down fa-m"></i>
+          <i onClick={async()=>closeDialog()} className="pl13 pr2 fas fa-times fa-m"></i>
         </div>
       </dialog>
-      : ""
+      : <button onClick={() => openDialog()}>search</button>
       }
       <div style={{
           "position":"relative",
@@ -98,15 +112,12 @@ function App() {
           This is a button that shoots confetti!
         </button>
         <div style={{"color":"white"}}>
-          <br/><br/>This is a button that shoots confetti!
-          <br/><br/>This is a button that shoots confetti!
-          <br/><br/>This is a button that shoots confetti!
+          <br/><br/>This is a button that shoots confetti, (incorrect)!
+          <br/><br/>This is a button that shoots confetti, (incorrect)!
+          <br/><br/>This is a button that shoots confetti, (incorrect)!
           <br/><br/>
         </div>
         <br/>
-        <button  onClick={() => cashMoney()} >
-          This is a button that shoots confetti!
-        </button>
       </div>
     </div>
   );
